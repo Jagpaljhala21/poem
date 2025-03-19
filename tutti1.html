@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Month of Poetry</title>
+    <style>
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f7f5f0;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header styles */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        /* Author section */
+        .author-section {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+        
+        .author-image {
+            flex: 0 0 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .author-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-bio {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .author-bio h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .author-bio p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+            background-color: #3498db;
+        }
+        
+        /* Poetry Collection Section */
+        .collection-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .collection-header h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .collection-header h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background-color: #3498db;
+        }
+        
+        /* Day cards */
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .day-card {
+            background-color: rgb(187, 99, 99);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .day-header {
+            padding: 0.75rem;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+        
+        .poem-image-container {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .poem-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .day-card:hover .poem-image {
+            transform: scale(1.05);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 800px;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .poem-full-image {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            margin-top: 1.5rem;
+        }
+        
+        /* Day group styles */
+        .day-group-header {
+            padding: 1rem;
+            margin: 2rem 0 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .day-group-header h3 {
+            color: #2c3e50;
+        }
+        
+        /* Calendar navigation */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+        }
+        
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .calendar-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .calendar-btn {
+            padding: 0.5rem 1rem;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .calendar-btn:hover {
+            background-color: #3498db;
+        }
+        
+        /* Footer styles */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+        }
+        
+        /* Week styles */
+        .week-segment {
+            margin-bottom: 2rem;
+        }
+        
+        .week-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .author-section {
+                flex-direction: column;
+            }
+            
+            .author-image {
+                flex: 0 0 250px;
+            }
+            
+            .days-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .days-container {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Month of Poetry</h1>
+            <p class="subtitle">A poem for each day of the month</p>
+        </header>
+        
+        <!-- Author Profile Section -->
+        <section class="author-section">
+            <div class="author-image">
+                <img src="/api/placeholder/300/400" alt="Author Portrait">
+            </div>
+            <div class="author-bio">
+                <h2>About the Poet</h2>
+                <p>Welcome to my poetic journey through the days of the month. I'm a passionate writer who finds inspiration in the small moments of everyday life.</p>
+                <p>Each day, I create a new poem that captures the essence of that day—the emotions, experiences, and observations that make each day unique.</p>
+                <p>Poetry has been my companion through life's joys and challenges. Through these works, I invite you to experience the world through my eyes and perhaps find resonance with your own experiences.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">F</a>
+                    <a href="#" class="social-link">T</a>
+                    <a href="#" class="social-link">I</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Poetry Collection Section -->
+        <section class="poetry-collection">
+            <div class="collection-header">
+                <h2>Daily Poems</h2>
+            </div>
+            
+            <div class="calendar-nav">
+                <div class="calendar-title">April 2025</div>
+                <div class="calendar-buttons">
+                    <button class="calendar-btn" id="prev-month">Previous</button>
+                    <button class="calendar-btn" id="next-month">Next</button>
+                </div>
+            </div>
+            
+            <!-- Week 1 -->
+            <div class="week-segment">
+                <div class="week-header">
+                    <h3>Week 1</h3>
+                </div>
+                <div class="days-container" id="week1">
+                    <!-- Week 1 day cards will be added here -->
+                </div>
+            </div>
+            
+            <!-- Week 2 -->
+            <div class="week-segment">
+                <div class="week-header">
+                    <h3>Week 2</h3>
+                </div>
+                <div class="days-container" id="week2">
+                    <!-- Week 2 day cards will be added here -->
+                </div>
+            </div>
+            
+            <!-- Week 3 -->
+            <div class="week-segment">
+                <div class="week-header">
+                    <h3>Week 3</h3>
+                </div>
+                <div class="days-container" id="week3">
+                    <!-- Week 3 day cards will be added here -->
+                </div>
+            </div>
+            
+            <!-- Week 4 -->
+            <div class="week-segment">
+                <div class="week-header">
+                    <h3>Week 4</h3>
+                </div>
+                <div class="days-container" id="week4">
+                    <!-- Week 4 day cards will be added here -->
+                </div>
+            </div>
+            
+            <!-- Week 5 (Remaining days) -->
+            <div class="week-segment">
+                <div class="week-header">
+                    <h3>Week 5</h3>
+                </div>
+                <div class="days-container" id="week5">
+                    <!-- Week 5 day cards will be added here -->
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>&copy; 2025 My Poetry Collection | All Rights Reserved</p>
+        </footer>
+    </div>
+    
+    <div class="modal" id="poemModal">
+        <div class="modal-content">
+            <button class="close-button" id="closeModal">&times;</button>
+            <h2 id="modalDay"></h2>
+            <img id="modalPoemImage" class="poem-full-image" src="" alt="Poem Image">
+        </div>
+    </div>
+    
+    <script>
+        // Sample data structure for your poems with image placeholders
+        const poems = [
+            // Week 1
+            {
+                day: 1,
+                title: "New Beginnings",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\1.jpg", // Replace with your actual image path
+                week: 1
+            },
+            {
+                day: 2,
+                title: "Morning Light",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\2.jpg",
+                week: 1
+            },
+            {
+                day: 3,
+                title: "Silent Reflection",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\3.jpg",
+                week: 1
+            },
+            {
+                day: 4,
+                title: "Passing Clouds",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\4.jpg",
+                week: 1
+            },
+            {
+                day: 5,
+                title: "Gentle Rain",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\5.jpg",
+                week: 1
+            },
+            {
+                day: 6,
+                title: "Weekend Thoughts",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\6.jpg",
+                week: 1
+            },
+            {
+                day: 7,
+                title: "Quiet Sunday",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\7.jpg",
+                week: 1
+            },
+            
+            // Week 2
+            {
+                day: 8,
+                title: "Monday Motivation",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\8.jpg",
+                week: 2
+            },
+            {
+                day: 9,
+                title: "Urban Melody",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\9.jpg",
+                week: 2
+            },
+            {
+                day: 10,
+                title: "Midweek Musings",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\10.jpg",
+                week: 2
+            },
+            {
+                day: 11,
+                title: "Afternoon Shadows",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\11.jpg",
+                week: 2
+            },
+            {
+                day: 12,
+                title: "Fleeting Moments",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\12.jpg",
+                week: 2
+            },
+            {
+                day: 13,
+                title: "Friday Feelings",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\13.jpg",
+                week: 2
+            },
+            {
+                day: 14,
+                title: "Weekend Wonders",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\14.jpg",
+                week: 2
+            },
+            
+            // Week 3
+            {
+                day: 15,
+                title: "Halfway Point",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\15.jpg",
+                week: 3
+            },
+            {
+                day: 16,
+                title: "Distant Dreams",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\16.jpg",
+                week: 3
+            },
+            {
+                day: 17,
+                title: "Hidden Patterns",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\17.jpg",
+                week: 3
+            },
+            {
+                day: 18,
+                title: "Unexpected Joy",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\18.jpg",
+                week: 3
+            },
+            {
+                day: 19,
+                title: "City Lights",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\19.jpg",
+                week: 3
+            },
+            {
+                day: 20,
+                title: "Whispered Secrets",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\20.jpg",
+                week: 3
+            },
+            {
+                day: 21,
+                title: "Weekly Reflections",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\21.jpg",
+                week: 3
+            },
+            
+            // Week 4
+            {
+                day: 22,
+                title: "Morning Dew",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\22.jpg",
+                week: 4
+            },
+            {
+                day: 23,
+                title: "Fading Memories",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\23.jpg",
+                week: 4
+            },
+            {
+                day: 24,
+                title: "Quiet Strength",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\24.jpg",
+                week: 4
+            },
+            {
+                day: 25,
+                title: "Dance of Shadows",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\25.jpg",
+                week: 4
+            },
+            {
+                day: 26,
+                title: "Evening Whispers",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\26.jpg",
+                week: 4
+            },
+            {
+                day: 27,
+                title: "Wandering Thoughts",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\27.jpg",
+                week: 4
+            },
+            {
+                day: 28,
+                title: "Ripples of Time",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\28.jpg",
+                week: 4
+            },
+            
+            // Week 5 (Remaining days)
+            {
+                day: 29,
+                title: "Fading Light",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\29.jpg",
+                week: 5
+            },
+            {
+                day: 30,
+                title: "Month's End",
+                imagePath: "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\30.jpg",
+                week: 5
+            }
+        ];
+        
+        // Function to create day cards
+        function createDayCards() {
+            // Clear existing cards
+            document.getElementById('week1').innerHTML = '';
+            document.getElementById('week2').innerHTML = '';
+            document.getElementById('week3').innerHTML = '';
+            document.getElementById('week4').innerHTML = '';
+            document.getElementById('week5').innerHTML = '';
+            
+            // Create new cards for each week
+            poems.forEach(poem => {
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                card.dataset.day = poem.day;
+                
+                card.innerHTML = `
+                    <div class="day-header">
+                        <h2>Day ${poem.day}</h2>
+                        <h3>${poem.title}</h3>
+                    </div>
+                    <div class="poem-image-container">
+                        <img class="poem-image" src="${poem.imagePath}" alt="Day ${poem.day} poem">
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => openPoemModal(poem));
+                document.getElementById(`week${poem.week}`).appendChild(card);
+            });
+        }
+        
+        // Function to open modal with full poem image
+        function openPoemModal(poem) {
+            const modal = document.getElementById('poemModal');
+            const modalDay = document.getElementById('modalDay');
+            const modalPoemImage = document.getElementById('modalPoemImage');
+            
+            modalDay.textContent = `Day ${poem.day}: ${poem.title}`;
+            modalPoemImage.src = poem.imagePath;
+            modalPoemImage.alt = `Day ${poem.day} poem`;
+            
+            modal.style.display = 'block';
+        }
+        
+        // Function to close modal
+        function closeModal() {
+            const modal = document.getElementById('poemModal');
+            modal.style.display = 'none';
+        }
+        
+        // Current month and year
+        let currentMonth = 3; // April (0-based index)
+        let currentYear = 2025;
+        
+        // Function to update calendar navigation
+        function updateCalendarNav() {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+            document.querySelector('.calendar-title').textContent = `${months[currentMonth]} ${currentYear}`;
+        }
+        
+        // Function to handle month navigation
+        function navigateMonth(direction) {
+            if (direction === 'prev') {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+            } else {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+            }
+            
+            updateCalendarNav();
+            // In a real application, you'd fetch new poems for the selected month
+            // For this example, we'll just leave the current poems
+        }
+        
+        // Event listeners
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('poemModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        document.getElementById('prev-month').addEventListener('click', () => navigateMonth('prev'));
+        document.getElementById('next-month').addEventListener('click', () => navigateMonth('next'));
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            createDayCards();
+            updateCalendarNav();
+        });
+        
+        // Function to update poems with your own images
+        function updatePoemImages(newPoems) {
+            // This function can be used to update the poems with your own data
+            poems.length = 0; // Clear existing poems
+            newPoems.forEach(poem => poems.push(poem));
+            
+            // Create new cards with updated poems
+            createDayCards();
+        }
+        
+        // Function to update author information
+        function updateAuthorInfo(name, bio, imagePath, socialLinks) {
+            document.querySelector('.author-bio h2').textContent = `About ${name}`;
+            
+            const bioParagraphs = document.querySelectorAll('.author-bio p');
+            if (bio.length >= bioParagraphs.length) {
+                for (let i = 0; i < bioParagraphs.length; i++) {
+                    bioParagraphs[i].textContent = bio[i];
+                }
+            }
+            
+            document.querySelector('.author-image img').src = imagePath;
+            
+            // Update social links if provided
+            if (socialLinks && socialLinks.length > 0) {
+                const socialLinksContainer = document.querySelector('.social-links');
+                socialLinksContainer.innerHTML = '';
+                
+                socialLinks.forEach(link => {
+                    const a = document.createElement('a');
+                    a.href = link.url;
+                    a.className = 'social-link';
+                    a.textContent = link.label;
+                    socialLinksContainer.appendChild(a);
+                });
+            }
+        }
+        
+        // Example of how you would update author info:
+        
+        updateAuthorInfo(
+            "Stuti Dave", 
+            [
+                "I'm a poet who explores the beauty in everyday moments.",
+                "This collection represents my journey through one month of daily writing.",
+                "Each poem captures a unique feeling or observation from that specific day."
+            ],
+            "C:\\Users\\jagpa\\OneDrive\\Documents\\tuti\\poem\\author.jpg",
+            [
+                { label: "I", url: "https://www.instagram.com/stutii._19/" }
+            ]
+        );
+        
+    </script>
+</body>
+</html>
